@@ -248,9 +248,50 @@ routerAdd('POST', '/backend/v1/whatsapp/webhook', (e) => {
     const processMessage = (msg) => {
       if (!msg || !msg.key || !msg.message) return
 
-      const typeKey = Object.keys(msg.message).find((k) => k !== 'messageContextInfo')
+      // Unwrap nested message wrappers (viewOnce, ephemeral, documentWithCaption).
+      // Evolution/Baileys nests the real content one or more levels deep inside
+      // wrapper objects. Without unwrapping, typeKey becomes the wrapper name
+      // (e.g. "viewOnceMessage") and content falls through to the unknown
+      // handler, producing "[mensagem não suportada]".
+      const wrapperKeys = [
+        'viewOnceMessage',
+        'viewOnceMessageV2',
+        'ephemeralMessage',
+        'documentWithCaptionMessage',
+      ]
+      for (let unwrapI = 0; unwrapI < 3; unwrapI++) {
+        const wKey = Object.keys(msg.message).find(
+          (k) => k !== 'messageContextInfo' && k !== 'caption',
+        )
+        if (wrapperKeys.includes(wKey)) {
+          const wrapper = msg.message[wKey]
+          if (wrapper && wrapper.message) {
+            msg.message = wrapper.message
+          } else {
+            break
+          }
+        } else {
+          break
+        }
+      }
 
-      if (!typeKey || ['protocolMessage', 'senderKeyDistributionMessage'].includes(typeKey)) {
+      let typeKey = Object.keys(msg.message).find(
+        (k) => k !== 'messageContextInfo' && k !== 'caption',
+      )
+
+      // If no typeKey found but a caption exists (e.g. documentWithCaptionMessage
+      // where the inner documentMessage was missing), treat caption as text.
+      if (!typeKey) {
+        if (msg.message.caption) {
+          typeKey = 'conversation'
+          msg.message.conversation = msg.message.caption
+        } else {
+          $app.logger().info('protocol_message_skipped', 'type', typeKey)
+          return
+        }
+      }
+
+      if (['protocolMessage', 'senderKeyDistributionMessage'].includes(typeKey)) {
         $app.logger().info('protocol_message_skipped', 'type', typeKey)
         return
       }
@@ -323,7 +364,9 @@ routerAdd('POST', '/backend/v1/whatsapp/webhook', (e) => {
       ) {
         msgType = typeKey
         const mediaData = msg.message[typeKey]
-        const caption = mediaData.caption || ''
+        // For documentWithCaptionMessage the caption lives at the message
+        // level (msg.message.caption), not inside the media object.
+        const caption = mediaData.caption || msg.message.caption || ''
         content = caption || ''
 
         let base64Str =
@@ -367,6 +410,23 @@ routerAdd('POST', '/backend/v1/whatsapp/webhook', (e) => {
       } else if (['pollCreationMessage', 'pollUpdateMessage'].includes(typeKey)) {
         msgType = typeKey
         content = '[Enquete]'
+      } else if (typeKey === 'buttonsResponseMessage') {
+        msgType = 'buttonsResponseMessage'
+        const brm = msg.message.buttonsResponseMessage
+        content = brm?.selectedButtonId || brm?.text || '[Resposta de botão]'
+      } else if (typeKey === 'listResponseMessage') {
+        msgType = 'listResponseMessage'
+        const lrm = msg.message.listResponseMessage
+        content = lrm?.title || lrm?.description || '[Seleção de lista]'
+      } else if (typeKey === 'interactiveMessage') {
+        msgType = 'interactiveMessage'
+        const im = msg.message.interactiveMessage
+        content = im?.body?.text || im?.header?.text || '[Mensagem interativa]'
+      } else if (typeKey === 'templateMessage') {
+        msgType = 'templateMessage'
+        const tm = msg.message.templateMessage
+        const ht = tm?.hydratedTemplate || tm?.fourRowTemplate
+        content = ht?.hydratedContentText || ht?.title || '[Template]'
       } else {
         msgType = 'unknown'
         content = '[mensagem não suportada]'
