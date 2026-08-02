@@ -55,6 +55,7 @@ import { CrmContact } from '@/types/models'
 import { CrmContactDetail } from '@/components/crm/CrmContactDetail'
 import { CrmCompaniesList } from '@/components/crm/CrmCompaniesList'
 import { CrmPipelineBoard } from '@/components/crm/CrmPipelineBoard'
+import { ContactTaskCarouselInline } from '@/components/crm/ContactTaskCarouselInline'
 import { PipelineEditorSheet } from '@/components/crm/PipelineEditorSheet'
 import { CategoriesSheet } from '@/components/categories/CategoriesSheet'
 import { useCategories } from '@/hooks/use-categories'
@@ -630,6 +631,14 @@ export default function CRM() {
                           )}
                         </div>
                       </div>
+                    </div>
+
+                    <div
+                      className="hidden lg:flex items-center shrink-0"
+                      onClick={(e) => e.stopPropagation()}
+                      onDragStart={(e) => e.stopPropagation()}
+                    >
+                      <ContactTaskCarouselInline contactId={contact.id} />
                     </div>
 
                     <div className="flex items-center justify-between sm:justify-end gap-4 w-full sm:w-auto mt-2 sm:mt-0">
