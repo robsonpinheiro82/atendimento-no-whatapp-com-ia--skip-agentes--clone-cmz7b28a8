@@ -12,6 +12,7 @@ import {
   Archive,
   ArchiveRestore,
   MoreVertical,
+  MessagesSquare,
   History,
   Wrench,
   LogOut,
@@ -54,6 +55,8 @@ type ChatListProps = {
   onDiagnose?: () => void
   onDisconnect?: () => void
   onFactoryReset?: () => void
+  onSyncConversations?: () => void
+  isSyncingConversations?: boolean
 }
 
 const SKELETON_ROWS = 6
@@ -90,6 +93,8 @@ export function ChatList({
   onDiagnose,
   onDisconnect,
   onFactoryReset,
+  onSyncConversations,
+  isSyncingConversations = false,
 }: ChatListProps) {
   const safeChats = chats || []
   const [searchTerm, setSearchTerm] = useState('')
@@ -137,7 +142,13 @@ export function ChatList({
   const isCurrentlyLoadingMore = loadingMore || globalLoadingMore
   const canLoadMore = hasMore || globalHasMore
 
-  const hasOwnerActions = !!(onReimportHistory || onDiagnose || onDisconnect || onFactoryReset)
+  const hasOwnerActions = !!(
+    onReimportHistory ||
+    onDiagnose ||
+    onDisconnect ||
+    onFactoryReset ||
+    onSyncConversations
+  )
 
   return (
     <div className={cn('flex flex-col h-full bg-white border-r border-border', className)}>
@@ -182,6 +193,17 @@ export function ChatList({
               )}
 
               {hasOwnerActions && <DropdownMenuSeparator />}
+
+              {onSyncConversations && (
+                <DropdownMenuItem onClick={onSyncConversations} disabled={isSyncingConversations}>
+                  {isSyncingConversations ? (
+                    <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                  ) : (
+                    <MessagesSquare className="mr-2 w-4 h-4 text-blue-600" />
+                  )}
+                  {isSyncingConversations ? 'Sincronizando...' : 'Sincronizar conversas'}
+                </DropdownMenuItem>
+              )}
 
               {onReimportHistory && (
                 <DropdownMenuItem onClick={onReimportHistory}>

@@ -103,6 +103,20 @@ export const sincronizarConversa = async (
   })
 }
 
+export const sincronizarTodasConversas = async () => {
+  return pb.send<{
+    success: boolean
+    total_found: number
+    already_existed: number
+    created: number
+    error?: string
+  }>('/backend/v1/whatsapp/sync-all-conversations', {
+    method: 'POST',
+    body: JSON.stringify({}),
+    headers: { 'Content-Type': 'application/json' },
+  })
+}
+
 /**
  * Força o backfill de `last_message_timestamp` em todas as conversations
  * do user logado (SQL direto). Usado quando detectamos convs sem o

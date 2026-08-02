@@ -41,6 +41,7 @@ import {
   enviarMidia,
   reimportarHistorico,
   sincronizarConversa,
+  sincronizarTodasConversas,
   factoryReset,
   arquivarConversa,
   type SyncPeriod,
@@ -117,6 +118,12 @@ export default function Conversas() {
   const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false)
   const [isResetting, setIsResetting] = useState(false)
   const [resetConfirmText, setResetConfirmText] = useState('')
+  const [isSyncingConvs, setIsSyncingConvs] = useState(false)
+  const [syncResult, setSyncResult] = useState<{
+    total_found: number
+    already_existed: number
+    created: number
+  } | null>(null)
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const { signOut } = useAuth()
@@ -198,6 +205,22 @@ export default function Conversas() {
       toast.error('Erro ao reimportar histórico: ' + (error.message || 'Erro desconhecido'))
     } finally {
       setIsReimporting(false)
+    }
+  }
+
+  const handleSyncConversations = async () => {
+    if (!instance?.instance_name) return
+    try {
+      setIsSyncingConvs(true)
+      const result = await sincronizarTodasConversas()
+      setSyncResult(result)
+      reloadChats()
+      toast.success(`Sincronização concluída: ${result.created} nova(s) conversa(s) criada(s).`)
+    } catch (error: any) {
+      const backendErr = error?.response?.error || error?.message || 'Erro desconhecido'
+      toast.error('Erro ao sincronizar conversas: ' + backendErr)
+    } finally {
+      setIsSyncingConvs(false)
     }
   }
 
@@ -461,6 +484,8 @@ export default function Conversas() {
                 role === 'owner' && instance ? () => disconnect(instance.instance_name) : undefined
               }
               onFactoryReset={role === 'owner' ? () => setIsResetConfirmOpen(true) : undefined}
+              onSyncConversations={role === 'owner' ? handleSyncConversations : undefined}
+              isSyncingConversations={isSyncingConvs}
             />
           </div>
         </div>
@@ -785,6 +810,43 @@ export default function Conversas() {
           )}
 
           <DialogFooter className="shrink-0">
+            <DialogClose asChild>
+              <Button variant="outline">Fechar</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!syncResult} onOpenChange={(open) => !open && setSyncResult(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-green-600" />
+              Sincronização de conversas
+            </DialogTitle>
+            <DialogDescription>
+              Suas conversas do WhatsApp foram sincronizadas com sucesso.
+            </DialogDescription>
+          </DialogHeader>
+          {syncResult && (
+            <div className="grid grid-cols-3 gap-3 py-4">
+              <div className="text-center p-4 rounded-lg bg-muted/50 border border-border">
+                <div className="text-2xl font-bold text-foreground">{syncResult.total_found}</div>
+                <div className="text-xs text-muted-foreground mt-1">Encontradas</div>
+              </div>
+              <div className="text-center p-4 rounded-lg bg-muted/50 border border-border">
+                <div className="text-2xl font-bold text-muted-foreground">
+                  {syncResult.already_existed}
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">Já existiam</div>
+              </div>
+              <div className="text-center p-4 rounded-lg bg-primary/10 border border-primary/20">
+                <div className="text-2xl font-bold text-primary">{syncResult.created}</div>
+                <div className="text-xs text-muted-foreground mt-1">Criadas agora</div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Fechar</Button>
             </DialogClose>
