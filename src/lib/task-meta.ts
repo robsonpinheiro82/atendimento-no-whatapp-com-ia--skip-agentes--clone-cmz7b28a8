@@ -17,14 +17,14 @@ export const TASK_STATUSES = [
   },
   {
     id: 'aguardando_contato',
-    label: 'Aguardando Contato',
+    label: 'Aguardando',
     color: 'bg-cyan-100 text-cyan-700 border-cyan-200',
     icon: Hourglass,
     dot: 'bg-cyan-500',
   },
   {
     id: 'aguardando_suporte',
-    label: 'Aguardando Suporte',
+    label: 'Suporte',
     color: 'bg-violet-100 text-violet-700 border-violet-200',
     icon: LifeBuoy,
     dot: 'bg-violet-500',

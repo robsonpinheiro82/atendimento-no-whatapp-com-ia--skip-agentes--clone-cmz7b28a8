@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-02T03:18:34.977Z",
+  "generatedAt": "2026-08-02T03:44:47.086Z",
   "collections": [
     {
       "name": "users",
@@ -1294,83 +1294,6 @@
       "indexes": [
         "CREATE INDEX idx_crm_stages_account ON crm_stages (account_id)",
         "CREATE UNIQUE INDEX idx_crm_stages_acc_key ON crm_stages (account_id, key)"
-      ]
-    },
-    {
-      "name": "crm_observations",
-      "type": "base",
-      "apiRules": {
-        "list": "@request.auth.id != '' && account_id.account_members_via_account_id.user_id ?= @request.auth.id",
-        "view": "@request.auth.id != '' && account_id.account_members_via_account_id.user_id ?= @request.auth.id",
-        "create": "@request.auth.id != '' && account_id.account_members_via_account_id.user_id ?= @request.auth.id",
-        "update": "@request.auth.id != '' && account_id.account_members_via_account_id.user_id ?= @request.auth.id",
-        "delete": "@request.auth.id != '' && account_id.account_members_via_account_id.user_id ?= @request.auth.id"
-      },
-      "fields": [
-        {
-          "name": "user_id",
-          "type": "relation",
-          "required": true,
-          "system": false,
-          "collectionRef": "users"
-        },
-        {
-          "name": "crm_contact_id",
-          "type": "relation",
-          "required": true,
-          "system": false,
-          "collectionRef": "crm_contacts"
-        },
-        {
-          "name": "account_id",
-          "type": "relation",
-          "required": true,
-          "system": false,
-          "collectionRef": "accounts"
-        },
-        {
-          "name": "content",
-          "type": "text",
-          "required": false,
-          "system": false
-        },
-        {
-          "name": "due_date",
-          "type": "date",
-          "required": false,
-          "system": false
-        },
-        {
-          "name": "created",
-          "type": "autodate",
-          "required": false,
-          "system": false,
-          "autodateTriggers": ["onCreate"]
-        },
-        {
-          "name": "updated",
-          "type": "autodate",
-          "required": false,
-          "system": false,
-          "autodateTriggers": ["onCreate", "onUpdate"]
-        },
-        {
-          "name": "status",
-          "type": "select",
-          "required": false,
-          "system": false,
-          "selectValues": [
-            "Concluído",
-            "Em Desenvolvimento",
-            "Aguardando Confirmação",
-            "Em Atraso",
-            "Aguardando Suporte"
-          ]
-        }
-      ],
-      "indexes": [
-        "CREATE INDEX idx_crm_observations_contact ON crm_observations (crm_contact_id)",
-        "CREATE INDEX idx_crm_observations_due ON crm_observations (due_date)"
       ]
     }
   ]

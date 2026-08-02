@@ -2,6 +2,7 @@ import { useState, useMemo, useEffect } from 'react'
 import { useTasks } from '@/hooks/use-tasks'
 import { TASK_STATUSES, TASK_PRIORITIES, getPriorityMeta } from '@/lib/task-meta'
 import { Task, CrmContact } from '@/types/models'
+import { useCrmEmpresas } from '@/hooks/use-crm-companies'
 import pb from '@/lib/pocketbase/client'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { updateTask, deleteTask } from '@/services/tasks'
@@ -49,6 +50,8 @@ export default function Tarefas() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [contacts, setContacts] = useState<CrmContact[]>([])
   const [contactFilter, setContactFilter] = useState('todos')
+  const [companyFilter, setCompanyFilter] = useState('todas')
+  const { companies } = useCrmEmpresas()
 
   useEffect(() => {
     getAllCrmContacts()
@@ -64,9 +67,10 @@ export default function Tarefas() {
       const matchPriority = priorityFilter === 'todas' || t.priority === priorityFilter
       const matchMine = !filterMine || t.assigned_to === pb.authStore.record?.id
       const matchContact = contactFilter === 'todos' || t.crm_contact_id === contactFilter
-      return matchSearch && matchPriority && matchMine && matchContact
+      const matchCompany = companyFilter === 'todas' || t.crm_company_id === companyFilter
+      return matchSearch && matchPriority && matchMine && matchContact && matchCompany
     })
-  }, [tasks, search, priorityFilter, filterMine, contactFilter])
+  }, [tasks, search, priorityFilter, filterMine, contactFilter, companyFilter])
 
   const kpis = useMemo(() => {
     const total = tasks.length
@@ -197,6 +201,19 @@ export default function Tarefas() {
             ))}
           </SelectContent>
         </Select>
+        <Select value={companyFilter} onValueChange={setCompanyFilter}>
+          <SelectTrigger className="w-full sm:w-[200px] bg-background">
+            <SelectValue placeholder="Empresa" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todas">Todas as empresas</SelectItem>
+            {companies.map((c) => (
+              <SelectItem key={c.id} value={c.id}>
+                {c.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Kanban Board */}
@@ -227,7 +244,7 @@ export default function Tarefas() {
                   </Badge>
                 </div>
 
-                <div className="p-3 flex flex-col gap-3 overflow-y-auto flex-1">
+                <div className="p-3 flex flex-col gap-3 overflow-y-auto flex-1 min-h-0">
                   {columnTasks.length === 0 ? (
                     <div className="h-28 border-2 border-dashed rounded-xl flex items-center justify-center text-muted-foreground text-sm flex-col gap-2 opacity-50">
                       <status.icon className="w-5 h-5" />

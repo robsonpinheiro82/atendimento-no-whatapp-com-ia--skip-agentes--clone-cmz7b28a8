@@ -165,7 +165,12 @@ export default function Layout() {
       )}
 
       {/* Main Content Area */}
-      <div className="flex-1 pt-24 pb-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full z-10">
+      <div
+        className={cn(
+          'flex-1 pt-24 pb-8 px-4 sm:px-6 lg:px-8 mx-auto w-full z-10',
+          !location.pathname.startsWith('/tarefas') && 'max-w-7xl',
+        )}
+      >
         <Outlet />
       </div>
     </main>
