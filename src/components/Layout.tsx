@@ -40,7 +40,12 @@ export default function Layout() {
     : undefined
 
   return (
-    <main className="flex flex-col min-h-screen bg-background relative overflow-x-hidden">
+    <main
+      className={cn(
+        'flex flex-col bg-background relative overflow-x-hidden',
+        location.pathname.startsWith('/tarefas') ? 'h-screen overflow-hidden' : 'min-h-screen',
+      )}
+    >
       {/* Background Noise */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-multiply bg-noise z-0" />
 
@@ -167,9 +172,9 @@ export default function Layout() {
       {/* Main Content Area */}
       <div
         className={cn(
-          'flex-1 pt-24 pb-8 px-4 sm:px-6 lg:px-8 mx-auto w-full z-10',
-          !location.pathname.startsWith('/tarefas') && 'max-w-7xl',
-          location.pathname.startsWith('/tarefas') && 'h-[calc(100vh-8rem)] overflow-hidden',
+          'pt-24 pb-8 px-4 sm:px-6 lg:px-8 mx-auto w-full z-10',
+          !location.pathname.startsWith('/tarefas') && 'flex-1 max-w-7xl',
+          location.pathname.startsWith('/tarefas') && 'flex-1 min-h-0 overflow-hidden',
         )}
       >
         <Outlet />
