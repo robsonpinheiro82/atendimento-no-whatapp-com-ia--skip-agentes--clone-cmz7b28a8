@@ -169,6 +169,7 @@ export default function Layout() {
         className={cn(
           'flex-1 pt-24 pb-8 px-4 sm:px-6 lg:px-8 mx-auto w-full z-10',
           !location.pathname.startsWith('/tarefas') && 'max-w-7xl',
+          location.pathname.startsWith('/tarefas') && 'h-[calc(100vh-8rem)] overflow-hidden',
         )}
       >
         <Outlet />

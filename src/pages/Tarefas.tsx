@@ -121,7 +121,7 @@ export default function Tarefas() {
   }
 
   return (
-    <div className="flex flex-col gap-6 h-full max-h-[calc(100vh-6rem)] overflow-hidden">
+    <div className="flex flex-col gap-6 h-full overflow-hidden">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 shrink-0">
         <div>
           <h1 className="font-serif text-3xl font-bold text-primary">Tarefas</h1>
@@ -217,7 +217,7 @@ export default function Tarefas() {
       </div>
 
       {/* Kanban Board */}
-      <div className="flex-1 overflow-x-auto overflow-y-hidden pb-4">
+      <div className="flex-1 overflow-x-auto overflow-y-hidden pb-4 min-h-0">
         <div className="flex gap-6 min-w-max h-full items-stretch">
           {TASK_STATUSES.map((status) => {
             const columnTasks = filteredTasks.filter((t) => t.status === status.id)
