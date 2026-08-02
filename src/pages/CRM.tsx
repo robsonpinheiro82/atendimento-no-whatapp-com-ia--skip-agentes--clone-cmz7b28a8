@@ -623,18 +623,12 @@ export default function CRM() {
                         </div>
                         <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-0.5">
                           <span className="font-mono text-xs">{formatPhoneBR(contact.phone)}</span>
-                          {contact.email && (
-                            <>
-                              <span className="text-muted-foreground/40">·</span>
-                              <span className="truncate">{contact.email}</span>
-                            </>
-                          )}
                         </div>
                       </div>
                     </div>
 
                     <div
-                      className="hidden lg:flex items-center shrink-0"
+                      className="hidden lg:flex items-center flex-1 min-w-0"
                       onClick={(e) => e.stopPropagation()}
                       onDragStart={(e) => e.stopPropagation()}
                     >

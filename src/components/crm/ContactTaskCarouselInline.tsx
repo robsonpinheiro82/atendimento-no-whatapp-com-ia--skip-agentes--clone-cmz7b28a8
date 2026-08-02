@@ -45,7 +45,7 @@ export function ContactTaskCarouselInline({ contactId }: ContactTaskCarouselInli
 
   if (loading) {
     return (
-      <div className="flex items-center gap-2 text-xs text-muted-foreground px-3 py-2 bg-muted/40 rounded-lg border border-border/40 min-w-[180px] max-w-[280px]">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground px-3 py-2 bg-muted/40 rounded-lg border border-border/40 w-full min-w-[180px]">
         <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
         <span className="truncate">Carregando tarefas...</span>
       </div>
@@ -54,7 +54,7 @@ export function ContactTaskCarouselInline({ contactId }: ContactTaskCarouselInli
 
   if (tasks.length === 0) {
     return (
-      <div className="flex items-center gap-2 text-xs text-muted-foreground/70 px-3 py-2 bg-muted/30 rounded-lg border border-border/30 border-dashed min-w-[180px] max-w-[280px]">
+      <div className="flex items-center gap-2 text-xs text-muted-foreground/70 px-3 py-2 bg-muted/30 rounded-lg border border-border/30 border-dashed w-full min-w-[180px]">
         <ListTodo className="w-3.5 h-3.5 shrink-0 opacity-50" />
         <span className="truncate">Nenhuma tarefa para este contato.</span>
       </div>
@@ -68,7 +68,7 @@ export function ContactTaskCarouselInline({ contactId }: ContactTaskCarouselInli
 
   return (
     <div
-      className="flex items-center gap-1.5 bg-muted/30 rounded-lg border border-border/40 min-w-[200px] max-w-[320px] overflow-hidden"
+      className="flex items-center gap-1.5 bg-muted/30 rounded-lg border border-border/40 w-full min-w-[200px] overflow-hidden"
       onClick={(e) => e.stopPropagation()}
       onDragStart={(e) => e.stopPropagation()}
     >
