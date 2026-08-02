@@ -240,6 +240,8 @@ export function TaskFormDialog({
                   <SelectContent>
                     <SelectItem value="pendente">Pendente</SelectItem>
                     <SelectItem value="em_andamento">Em Andamento</SelectItem>
+                    <SelectItem value="aguardando_contato">Aguardando Contato</SelectItem>
+                    <SelectItem value="aguardando_suporte">Aguardando Suporte</SelectItem>
                     <SelectItem value="concluida">Concluída</SelectItem>
                     <SelectItem value="cancelada">Cancelada</SelectItem>
                   </SelectContent>

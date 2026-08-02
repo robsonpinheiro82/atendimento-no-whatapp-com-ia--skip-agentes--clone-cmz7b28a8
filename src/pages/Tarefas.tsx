@@ -1,7 +1,7 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useTasks } from '@/hooks/use-tasks'
 import { TASK_STATUSES, TASK_PRIORITIES, getPriorityMeta } from '@/lib/task-meta'
-import { Task } from '@/types/models'
+import { Task, CrmContact } from '@/types/models'
 import pb from '@/lib/pocketbase/client'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { updateTask, deleteTask } from '@/services/tasks'
@@ -29,6 +29,7 @@ import { format } from 'date-fns'
 import { useNavigate } from 'react-router-dom'
 import { cn } from '@/lib/utils'
 import { TaskViewDialog } from '@/components/TaskViewDialog'
+import { getAllCrmContacts } from '@/services/crm_service'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,6 +47,14 @@ export default function Tarefas() {
 
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [contacts, setContacts] = useState<CrmContact[]>([])
+  const [contactFilter, setContactFilter] = useState('todos')
+
+  useEffect(() => {
+    getAllCrmContacts()
+      .then(setContacts)
+      .catch(() => {})
+  }, [])
 
   const filteredTasks = useMemo(() => {
     return tasks.filter((t) => {
@@ -54,9 +63,10 @@ export default function Tarefas() {
         (t.description || '').toLowerCase().includes(search.toLowerCase())
       const matchPriority = priorityFilter === 'todas' || t.priority === priorityFilter
       const matchMine = !filterMine || t.assigned_to === pb.authStore.record?.id
-      return matchSearch && matchPriority && matchMine
+      const matchContact = contactFilter === 'todos' || t.crm_contact_id === contactFilter
+      return matchSearch && matchPriority && matchMine && matchContact
     })
-  }, [tasks, search, priorityFilter, filterMine])
+  }, [tasks, search, priorityFilter, filterMine, contactFilter])
 
   const kpis = useMemo(() => {
     const total = tasks.length
@@ -116,7 +126,7 @@ export default function Tarefas() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 shrink-0">
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-4 shrink-0">
         <Card className="p-4 flex flex-col items-start justify-center bg-primary/5 border-primary/20">
           <span className="text-sm font-medium text-muted-foreground mb-1">Total</span>
           <span className="text-2xl font-bold">{loading ? '-' : kpis.total}</span>
@@ -174,11 +184,24 @@ export default function Tarefas() {
             ))}
           </SelectContent>
         </Select>
+        <Select value={contactFilter} onValueChange={setContactFilter}>
+          <SelectTrigger className="w-full sm:w-[200px] bg-background">
+            <SelectValue placeholder="Contato" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="todos">Todos os contatos</SelectItem>
+            {contacts.map((c) => (
+              <SelectItem key={c.id} value={c.id}>
+                {c.contact_name || c.push_name || c.phone || 'Sem nome'}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Kanban Board */}
       <div className="flex-1 overflow-x-auto overflow-y-hidden pb-4">
-        <div className="flex gap-6 min-w-max h-full items-start">
+        <div className="flex gap-6 min-w-max h-full items-stretch">
           {TASK_STATUSES.map((status) => {
             const columnTasks = filteredTasks.filter((t) => t.status === status.id)
             const isDragOver = dragOverColumn === status.id

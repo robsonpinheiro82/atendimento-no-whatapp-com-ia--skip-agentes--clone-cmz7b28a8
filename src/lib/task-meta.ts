@@ -1,4 +1,4 @@
-import { Clock, CheckCircle2, XCircle, Loader2 } from 'lucide-react'
+import { Clock, CheckCircle2, XCircle, Loader2, Hourglass, LifeBuoy } from 'lucide-react'
 
 export const TASK_STATUSES = [
   {
@@ -14,6 +14,20 @@ export const TASK_STATUSES = [
     color: 'bg-amber-100 text-amber-700 border-amber-200',
     icon: Loader2,
     dot: 'bg-amber-500',
+  },
+  {
+    id: 'aguardando_contato',
+    label: 'Aguardando Contato',
+    color: 'bg-cyan-100 text-cyan-700 border-cyan-200',
+    icon: Hourglass,
+    dot: 'bg-cyan-500',
+  },
+  {
+    id: 'aguardando_suporte',
+    label: 'Aguardando Suporte',
+    color: 'bg-violet-100 text-violet-700 border-violet-200',
+    icon: LifeBuoy,
+    dot: 'bg-violet-500',
   },
   {
     id: 'concluida',

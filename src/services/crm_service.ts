@@ -52,3 +52,10 @@ export const updateCrmContactStage = async (id: string, stage: string) => {
 export const deleteCrmContact = async (id: string) => {
   return pb.collection('crm_contacts').delete(id)
 }
+
+export const getAllCrmContacts = async () => {
+  return pb.collection('crm_contacts').getFullList<CrmContact>({
+    sort: '-created',
+    requestKey: null,
+  })
+}
