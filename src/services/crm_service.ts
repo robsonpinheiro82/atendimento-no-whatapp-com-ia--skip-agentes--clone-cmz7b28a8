@@ -41,7 +41,7 @@ export const getCrmContacts = async (instance_name: string) => {
   return pb.collection('crm_contacts').getFullList<CrmContact>({
     filter: `instance_name = '${instance_name}'`,
     sort: '-created',
-    expand: 'assigned_to',
+    expand: 'assigned_to,company_id',
   })
 }
 

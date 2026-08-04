@@ -49,6 +49,7 @@ import { useSearchParams } from 'react-router-dom'
 import pb from '@/lib/pocketbase/client'
 import { useInstanciaAtiva } from '@/hooks/use-whatsapp'
 import { useCrmContatos, formatPhoneBR } from '@/hooks/use-crm'
+import { useTasks } from '@/hooks/use-tasks'
 import { updateCrmContactStage, deleteCrmContact } from '@/services/crm_service'
 import { getDisplayName, isInvalidContactName } from '@/lib/whatsapp-mappers'
 import { CrmContact } from '@/types/models'
@@ -73,6 +74,7 @@ export default function CRM() {
   const [searchParams, setSearchParams] = useSearchParams()
   const { instance } = useInstanciaAtiva()
   const { contacts, loading, reload } = useCrmContatos(instance?.instance_name)
+  const { tasks } = useTasks()
   const { accountId } = useCurrentAccount()
   const { categories } = useCategories(accountId || undefined)
   // O CRM é a tela "dona" das etapas → faz o lazy seed das 4 padrão se a
@@ -134,10 +136,36 @@ export default function CRM() {
     })
   }, [contacts, debouncedSearch, ownerFilter, selectedCategoryIds])
 
+  const contactsWithOpenTasks = useMemo(() => {
+    const set = new Set<string>()
+    for (const t of tasks) {
+      if (t.crm_contact_id && t.status !== 'concluida' && t.status !== 'cancelada') {
+        set.add(t.crm_contact_id)
+      }
+    }
+    return set
+  }, [tasks])
+
   const filteredContacts = useMemo(() => {
-    if (activeTab === 'all' || isCompanies) return commonFiltered
-    return commonFiltered.filter((c) => c.stage === activeTab)
-  }, [commonFiltered, activeTab, isCompanies])
+    const base =
+      activeTab === 'all' || isCompanies
+        ? commonFiltered
+        : commonFiltered.filter((c) => c.stage === activeTab)
+
+    return [...base].sort((a, b) => {
+      const aHasOpen = contactsWithOpenTasks.has(a.id) ? 0 : 1
+      const bHasOpen = contactsWithOpenTasks.has(b.id) ? 0 : 1
+      if (aHasOpen !== bHasOpen) return aHasOpen - bHasOpen
+
+      const aCompany = a.expand?.company_id?.name || ''
+      const bCompany = b.expand?.company_id?.name || ''
+      if (aCompany !== bCompany) return aCompany.localeCompare(bCompany)
+
+      const aName = (a.contact_name || a.push_name || a.jid || '').toLowerCase()
+      const bName = (b.contact_name || b.push_name || b.jid || '').toLowerCase()
+      return aName.localeCompare(bName)
+    })
+  }, [commonFiltered, activeTab, isCompanies, contactsWithOpenTasks])
 
   const getStageCount = (stageId: string) => {
     if (stageId === 'all') return contacts.length
@@ -590,39 +618,52 @@ export default function CRM() {
                         </Avatar>
                       </div>
 
-                      <div className="flex-1 min-w-0 flex flex-col justify-center">
-                        <div className="flex items-center gap-2">
-                          <h4 className="font-serif font-bold text-primary text-base truncate">
-                            {getContactTitle(contact)}
-                          </h4>
-                          {contact.category_ids && contact.category_ids.length > 0 && (
-                            <div className="flex items-center gap-1 shrink-0">
-                              {contact.category_ids.slice(0, 3).map((id) => {
-                                const cat = categories.find((c) => c.id === id)
-                                if (!cat) return null
-                                return (
-                                  <Badge
-                                    key={cat.id}
-                                    variant="secondary"
-                                    className={cn(
-                                      'text-[10px] px-1.5 py-0 border-0 text-white font-medium leading-tight h-4',
-                                      CATEGORY_COLOR_MAP[cat.color],
-                                    )}
-                                  >
-                                    {cat.name}
-                                  </Badge>
-                                )
-                              })}
-                              {contact.category_ids.length > 3 && (
-                                <span className="text-[10px] text-muted-foreground font-medium">
-                                  +{contact.category_ids.length - 3}
-                                </span>
-                              )}
-                            </div>
-                          )}
+                      <div className="flex-1 min-w-0 flex flex-col sm:flex-row gap-1 sm:gap-4">
+                        <div className="flex-1 min-w-0 flex flex-col justify-center">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-serif font-bold text-primary text-base truncate">
+                              {getContactTitle(contact)}
+                            </h4>
+                            {contact.category_ids && contact.category_ids.length > 0 && (
+                              <div className="flex items-center gap-1 shrink-0">
+                                {contact.category_ids.slice(0, 3).map((id) => {
+                                  const cat = categories.find((c) => c.id === id)
+                                  if (!cat) return null
+                                  return (
+                                    <Badge
+                                      key={cat.id}
+                                      variant="secondary"
+                                      className={cn(
+                                        'text-[10px] px-1.5 py-0 border-0 text-white font-medium leading-tight h-4',
+                                        CATEGORY_COLOR_MAP[cat.color],
+                                      )}
+                                    >
+                                      {cat.name}
+                                    </Badge>
+                                  )
+                                })}
+                                {contact.category_ids.length > 3 && (
+                                  <span className="text-[10px] text-muted-foreground font-medium">
+                                    +{contact.category_ids.length - 3}
+                                  </span>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-0.5">
+                            <span className="font-mono text-xs">
+                              {formatPhoneBR(contact.phone)}
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1.5 text-sm text-muted-foreground mt-0.5">
-                          <span className="font-mono text-xs">{formatPhoneBR(contact.phone)}</span>
+
+                        <div className="flex items-center min-w-0 sm:max-w-[180px] shrink-0">
+                          {contact.expand?.company_id && (
+                            <span className="flex items-center gap-1.5 text-sm font-medium text-muted-foreground truncate">
+                              <Building2 className="w-3.5 h-3.5 shrink-0 opacity-60" />
+                              <span className="truncate">{contact.expand.company_id.name}</span>
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
