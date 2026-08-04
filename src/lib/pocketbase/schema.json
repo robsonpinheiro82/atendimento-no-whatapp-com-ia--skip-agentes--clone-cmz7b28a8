@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-04T03:58:55.841Z",
+  "generatedAt": "2026-08-04T05:36:33.616Z",
   "collections": [
     {
       "name": "users",
@@ -826,12 +826,6 @@
           "system": false
         },
         {
-          "name": "system_prompt",
-          "type": "text",
-          "required": true,
-          "system": false
-        },
-        {
           "name": "created",
           "type": "autodate",
           "required": false,
@@ -851,6 +845,12 @@
           "required": false,
           "system": false,
           "collectionRef": "accounts"
+        },
+        {
+          "name": "system_prompt",
+          "type": "text",
+          "required": true,
+          "system": false
         }
       ],
       "indexes": []
