@@ -40,12 +40,49 @@ onRecordAfterCreateSuccess((e) => {
 
   try {
     const textContent = msg.getString('content') || 'Mensagem em formato de mídia.'
+
+    let contactName = 'Não informado'
+    let companyName = 'Não informado'
+    let pipelineStage = 'novo'
+
+    try {
+      const crmContact = $app.findFirstRecordByFilter(
+        'crm_contacts',
+        'instance_name = {:instance} && jid = {:jid}',
+        { instance: msg.getString('instance_name'), jid: remoteJid },
+      )
+      const crmContactName = crmContact.getString('contact_name')
+      if (crmContactName) contactName = crmContactName
+
+      pipelineStage = crmContact.getString('stage') || 'novo'
+
+      const companyId = crmContact.getString('company_id')
+      if (companyId) {
+        try {
+          const company = $app.findRecordById('crm_companies', companyId)
+          const compName = company.getString('name')
+          if (compName) companyName = compName
+        } catch (_) {}
+      }
+    } catch (_) {
+      const pushName = conv.getString('contact_name') || msg.getString('push_name')
+      if (pushName) contactName = pushName
+    }
+
+    const contextBlock = `<contexto_do_contato>
+Nome: ${contactName}
+Telefone: ${remoteJid}
+Empresa: ${companyName}
+Estágio: ${pipelineStage}
+</contexto_do_contato>
+Mensagem recebida: ${textContent}`
+
     const finalMessage = `<system_instruction>
 Siga estritamente esta Persona/Instrução do usuário para moldar sua resposta e comportamento:
 ${userAgentPrompt}
 </system_instruction>
 
-${textContent}`
+${contextBlock}`
 
     let aiConvId = conv.getString('ai_conversation_id') || null
 
