@@ -80,6 +80,14 @@
     animation: import-slide 1.4s ease-in-out infinite;
   }
 
+  .crm-detail-scroll [data-radix-scroll-area-thumb] {
+    background-color: hsl(var(--primary) / 0.5);
+  }
+
+  .crm-detail-scroll [data-radix-scroll-area-thumb]:hover {
+    background-color: hsl(var(--primary) / 0.65);
+  }
+
   @keyframes import-slide {
     0% {
       transform: translateX(-100%);
