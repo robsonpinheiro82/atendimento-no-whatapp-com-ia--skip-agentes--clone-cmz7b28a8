@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-05T00:24:20.588Z",
+  "generatedAt": "2026-08-24T19:36:46.986Z",
   "collections": [
     {
       "name": "users",
@@ -167,6 +167,13 @@
           "required": false,
           "system": false,
           "collectionRef": "accounts"
+        },
+        {
+          "name": "default_ai_agent_id",
+          "type": "relation",
+          "required": false,
+          "system": false,
+          "collectionRef": "ai_agents"
         }
       ],
       "indexes": [

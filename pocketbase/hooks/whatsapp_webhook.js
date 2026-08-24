@@ -81,7 +81,10 @@ routerAdd('POST', '/backend/v1/whatsapp/webhook', (e) => {
         convCache.set(key, res)
         return res
       } catch (_) {
-        const res = { enabled: false, agentId: null }
+        const defaultAgentId = instanceRecord.getString('default_ai_agent_id')
+        const res = defaultAgentId
+          ? { enabled: true, agentId: defaultAgentId }
+          : { enabled: false, agentId: null }
         convCache.set(key, res)
         return res
       }
@@ -137,6 +140,33 @@ routerAdd('POST', '/backend/v1/whatsapp/webhook', (e) => {
             convRecord.set('is_group', agg.isGroup)
             convRecord.set('type', agg.isGroup ? 'group' : 'individual')
             convRecord.set('unread_count', 0)
+
+            const defaultAgentId = instanceRecord.getString('default_ai_agent_id')
+            if (defaultAgentId) {
+              convRecord.set('ai_agent_id', defaultAgentId)
+              convRecord.set('ai_enabled', true)
+
+              let agentName = ''
+              try {
+                const ag = $app.findRecordById('ai_agents', defaultAgentId)
+                agentName = ag.getString('name')
+              } catch (_) {}
+
+              $app
+                .logger()
+                .info(
+                  'Conversa nova: agente padrao atribuido automaticamente',
+                  'remote_jid',
+                  remoteJid,
+                  'ai_agent_id',
+                  defaultAgentId,
+                  'agent_name',
+                  agentName,
+                  'instance_name',
+                  instanceName,
+                )
+            }
+
             isNewConv = true
           }
 
@@ -644,12 +674,48 @@ routerAdd('POST', '/backend/v1/whatsapp/webhook', (e) => {
       }
       $app.save(instanceRecord)
     } else if (event === 'messages.upsert') {
-      if (Array.isArray(data?.messages)) {
-        for (const msg of data.messages) {
-          processMessage(msg)
+      const incomingMsgs = Array.isArray(data?.messages) ? data.messages : data ? [data] : []
+
+      // Passo 1: Garantir que conversas novas/existentes sejam criadas/atualizadas com ai_enabled/ai_agent_id
+      for (const msg of incomingMsgs) {
+        if (!msg || !msg.key || !msg.message) continue
+        const remoteJid = msg.key.remoteJid
+        if (!remoteJid || remoteJid === 'status@broadcast') continue
+        const isGroup = remoteJid.endsWith('@g.us')
+        const fromMe = msg.key.fromMe === true
+        const pushName = msg.pushName || ''
+        const normalizedTs = tsToUnixSeconds(msg.messageTimestamp)
+
+        let fallbackText = ''
+        if (msg.message.conversation) {
+          fallbackText = msg.message.conversation
+        } else if (msg.message.extendedTextMessage?.text) {
+          fallbackText = msg.message.extendedTextMessage.text
+        } else {
+          const typeKey = Object.keys(msg.message).find(
+            (k) => k !== 'messageContextInfo' && k !== 'caption',
+          )
+          if (typeKey && typeKey.includes('image')) fallbackText = '[image]'
+          else if (typeKey && typeKey.includes('video')) fallbackText = '[video]'
+          else if (typeKey && typeKey.includes('audio')) fallbackText = '[audio]'
+          else if (typeKey && typeKey.includes('document')) fallbackText = '[document]'
+          else if (typeKey && typeKey.includes('sticker')) fallbackText = '[sticker]'
         }
-      } else if (data) {
-        processMessage(data)
+
+        recordConvUpdate({
+          remoteJid,
+          isGroup,
+          ts: normalizedTs,
+          fromMe,
+          fallbackText,
+          pushName,
+        })
+      }
+      flushConvUpdates()
+
+      // Passo 2: Processar e salvar mensagens (o hook whatsapp_ai_response disparará após a gravação da mensagem e encontrará a conversa já com ai_enabled = true)
+      for (const msg of incomingMsgs) {
+        processMessage(msg)
       }
       flushConvUpdates()
     } else if (event === 'messages.update') {
@@ -710,6 +776,35 @@ routerAdd('POST', '/backend/v1/whatsapp/webhook', (e) => {
       const cutoffTs =
         syncPeriodDays > 0 ? Math.floor(Date.now() / 1000) - syncPeriodDays * 86400 : 0
 
+      // Passo 1: Pré-registrar e salvar conversas
+      for (const msg of toProcess) {
+        if (!msg || !msg.key || !msg.message) continue
+        const remoteJid = msg.key.remoteJid
+        if (!remoteJid || remoteJid === 'status@broadcast') continue
+        const isGroup = remoteJid.endsWith('@g.us')
+        const fromMe = msg.key.fromMe === true
+        const pushName = msg.pushName || ''
+        const normalizedTs = tsToUnixSeconds(msg.messageTimestamp)
+
+        let fallbackText = ''
+        if (msg.message.conversation) {
+          fallbackText = msg.message.conversation
+        } else if (msg.message.extendedTextMessage?.text) {
+          fallbackText = msg.message.extendedTextMessage.text
+        }
+
+        recordConvUpdate({
+          remoteJid,
+          isGroup,
+          ts: normalizedTs,
+          fromMe,
+          fallbackText,
+          pushName,
+        })
+      }
+      flushConvUpdates()
+
+      // Passo 2: Processar e salvar mensagens
       let processedCount = 0
       for (const msg of toProcess) {
         if (cutoffTs > 0) {
