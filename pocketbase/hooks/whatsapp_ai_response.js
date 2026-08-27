@@ -70,8 +70,11 @@ onRecordAfterCreateSuccess((e) => {
     }
 
     const contextBlock = `<contexto_do_contato>
+Instance: ${msg.getString('instance_name')}
+User ID: ${userId}
+Account ID: ${msg.getString('account_id')}
 Nome: ${contactName}
-Telefone: ${remoteJid}
+Telefone/JID: ${remoteJid}
 Empresa: ${companyName}
 Estágio: ${pipelineStage}
 </contexto_do_contato>
