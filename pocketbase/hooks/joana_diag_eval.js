@@ -16,8 +16,6 @@ routerAdd('GET', '/backend/v1/diag/agent-eval', (e) => {
         id: a.id,
         name: a.getString('name'),
         system_prompt: a.getString('system_prompt'),
-        created: a.getDateTime('created').string(),
-        updated: a.getDateTime('updated').string,
       })
     }
   } catch (err) {
@@ -27,13 +25,7 @@ routerAdd('GET', '/backend/v1/diag/agent-eval', (e) => {
   // 2) Hosted agent conversations (whatsapp-manager)
   try {
     const convs = $ai.agent('whatsapp-manager').listConversations({ limit: 200 })
-    out.conversations = convs.map((c) => ({
-      id: c.id,
-      title: c.title,
-      user_id: c.user_id,
-      created: c.created,
-      updated: c.updated,
-    }))
+    out.conversations = convs
   } catch (err) {
     out.conversations_error = String(err)
   }
