@@ -6,16 +6,44 @@ routerAdd('GET', '/backend/v1/diag/agent-eval', (e) => {
     return e.json(401, { error: 'unauthorized' })
   }
 
-  const out = {}
+  const out = { users: [], conversations: [] }
+
   try {
-    const raw = $ai
-      .agent('whatsapp-manager')
-      .listConversations({ user_id: 'oenuceq0hvpecdv', limit: 200 })
-    out.raw_type = typeof raw
-    out.raw_keys = raw ? Object.keys(raw) : null
-    out.raw = raw
+    const users = $app.findRecordsByFilter('users', '', '-created', 0, 0)
+    for (const u of users) {
+      out.users.push({ id: u.id, email: u.getString('email') })
+    }
   } catch (err) {
-    out.error = String(err)
+    out.users_error = String(err)
   }
+
+  for (const u of out.users) {
+    try {
+      const res = $ai.agent('whatsapp-manager').listConversations({ user_id: u.id, limit: 200 })
+      const convs = res && res.conversations ? res.conversations : []
+      for (const c of convs) {
+        const entry = { id: c.id, user_email: u.email, updated: c.updated, messages: [] }
+        try {
+          const mres = $ai
+            .agent('whatsapp-manager')
+            .listMessages({ conversation_id: c.id, user_id: u.id, limit: 200 })
+          const msgs = mres && mres.messages ? mres.messages : Array.isArray(mres) ? mres : []
+          for (const m of msgs) {
+            entry.messages.push({
+              role: m.role,
+              content: (m.content || '').substring(0, 4000),
+              created: m.created,
+            })
+          }
+        } catch (err) {
+          entry.messages_error = String(err)
+        }
+        out.conversations.push(entry)
+      }
+    } catch (err) {
+      out.conversations_error = String(err)
+    }
+  }
+
   return e.json(200, out)
 })
