@@ -6,10 +6,10 @@ routerAdd('GET', '/backend/v1/diag/agent-eval', (e) => {
     return e.json(401, { error: 'unauthorized' })
   }
 
-  const out = { users: [], conversations: [] }
+  const out = { v: 32, users: [], conversations: [] }
 
   try {
-    const users = $app.findRecordsByFilter('users', '', '-created', 0, 0)
+    const users = $app.findRecordsByFilter('users', '', '-created', 100, 0)
     for (const u of users) {
       out.users.push({ id: u.id, email: u.getString('email') })
     }
