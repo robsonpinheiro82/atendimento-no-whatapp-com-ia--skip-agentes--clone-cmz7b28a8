@@ -1,9 +1,9 @@
 import fs from 'fs'
 import path from 'path'
 
-// Lista de arquivos a incluir no backup
-const filesToInclude = [
-  // 1. Configs e Raiz
+// Lista de arquivos a incluir no backup consolidado
+export const filesToInclude = [
+  // 1. Configurações & Documentação da Raiz
   'CLAUDE.md',
   'README.md',
   'package.json',
@@ -18,6 +18,8 @@ const filesToInclude = [
   '.oxlintrc.json',
   '.oxfmtrc.json',
   '.gitignore',
+  '.npmrc',
+  '.skip.config.json',
   'vite-plugin-react-uid.js',
 
   // 2. PocketBase Hooks
@@ -102,7 +104,12 @@ const filesToInclude = [
   'pocketbase/migrations/0052_define_whatsapp_agent.js',
   'pocketbase/migrations/0053_add_ai_conversation_id.js',
   'pocketbase/migrations/0054_create_crm_stages.js',
+  'pocketbase/migrations/0055_create_crm_observations.js',
+  'pocketbase/migrations/0056_fix_verified_users.js',
+  'pocketbase/migrations/0057_add_status_to_observations.js',
+  'pocketbase/migrations/0058_add_aguardando_suporte_status.js',
   'pocketbase/migrations/0059_add_task_statuses.js',
+  'pocketbase/migrations/deleted_crm_observations.js',
   'pocketbase/migrations/0060_increase_system_prompt_max.js',
   'pocketbase/migrations/0061_increase_system_prompt_to_10000.js',
   'pocketbase/migrations/0062_add_default_ai_agent_id.js',
@@ -240,13 +247,15 @@ const filesToInclude = [
   'src/components/ui/use-toast.ts',
 ]
 
-function generateBackup() {
+export function generateBackup(options = {}) {
+  const rootDir = options.rootDir || process.cwd()
   const now = new Date()
   const dateFormatted = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
 
-  let validFiles = []
+  const validFiles = []
   for (const relPath of filesToInclude) {
-    if (fs.existsSync(relPath)) {
+    const fullPath = path.resolve(rootDir, relPath)
+    if (fs.existsSync(fullPath)) {
       validFiles.push(relPath)
     } else {
       console.warn('Arquivo não encontrado:', relPath)
@@ -269,29 +278,32 @@ CONTEÚDO INTEGRAL DOS ARQUIVOS
 ================================================================
 `
 
-  if (!fs.existsSync('docs')) {
-    fs.mkdirSync('docs', { recursive: true })
+  const docsDir = path.resolve(rootDir, 'docs')
+  if (!fs.existsSync(docsDir)) {
+    fs.mkdirSync(docsDir, { recursive: true })
   }
 
-  const outPath = 'docs/backup-codigo-completo.txt'
-  const writeStream = fs.createWriteStream(outPath, { encoding: 'utf8' })
-  writeStream.write(header)
+  const outPath = path.resolve(rootDir, 'docs/backup-codigo-completo.txt')
+  const parts = [header]
 
   for (const relPath of validFiles) {
-    writeStream.write(`\n================================================================\n`)
-    writeStream.write(`ARQUIVO: ${relPath}\n`)
-    writeStream.write(`================================================================\n`)
-    const content = fs.readFileSync(relPath, 'utf8')
-    writeStream.write(content)
+    parts.push(`\n================================================================\n`)
+    parts.push(`ARQUIVO: ${relPath}\n`)
+    parts.push(`================================================================\n`)
+    const fullPath = path.resolve(rootDir, relPath)
+    const content = fs.readFileSync(fullPath, 'utf8')
+    parts.push(content)
     if (!content.endsWith('\n')) {
-      writeStream.write('\n')
+      parts.push('\n')
     }
   }
 
-  writeStream.write(`\n================================================================\n`)
-  writeStream.write(`FIM DO BACKUP CONSOLIDADO (${validFiles.length} ARQUIVOS)\n`)
-  writeStream.write(`================================================================\n`)
-  writeStream.end()
+  parts.push(`\n================================================================\n`)
+  parts.push(`FIM DO BACKUP CONSOLIDADO (${validFiles.length} ARQUIVOS)\n`)
+  parts.push(`================================================================\n`)
+
+  const fullContent = parts.join('')
+  fs.writeFileSync(outPath, fullContent, 'utf8')
 
   console.log(`Backup gerado com sucesso em ${outPath}`)
   console.log(`Total de arquivos: ${validFiles.length}`)
@@ -299,6 +311,16 @@ CONTEÚDO INTEGRAL DOS ARQUIVOS
   console.log(
     `Tamanho do arquivo: ${(stats.size / 1024 / 1024).toFixed(2)} MB (${stats.size} bytes)`,
   )
+
+  return {
+    outPath,
+    totalFiles: validFiles.length,
+    size: stats.size,
+    content: fullContent,
+  }
 }
 
-generateBackup()
+// Execução direta via Node.js
+if (process.argv[1] && process.argv[1].endsWith('generate_backup.mjs')) {
+  generateBackup()
+}
