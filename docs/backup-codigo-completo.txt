@@ -1,0 +1,1295 @@
+================================================================
+BACKUP CONSOLIDADO DO CÓDIGO-FONTE DO PROJETO
+Projeto: Atendimento no WhatsApp com IA (Skip Agentes) Clone
+Data de Geração: 2025-05-18
+Ambiente: React + TypeScript + Vite + TailwindCSS + PocketBase (Skip Cloud)
+================================================================
+
+ÍNDICE DE ARQUIVOS INCLUÍDOS NESTE BACKUP CONSOLIDADO
+Total de arquivos catalogados: 120 arquivos
+----------------------------------------------------------------
+1. CONFIGURAÇÕES & DOCUMENTAÇÃO DA RAIZ
+   - CLAUDE.md
+   - README.md
+   - package.json
+   - vite.config.ts
+   - tailwind.config.ts
+   - tsconfig.json
+   - tsconfig.app.json
+   - tsconfig.node.json
+   - postcss.config.js
+   - components.json
+   - index.html
+   - .gitignore
+   - .oxlintrc.json
+   - .oxfmtrc.json
+   - vite-plugin-react-uid.js
+
+2. BACKEND POCKETBASE (HOOKS)
+   - pocketbase/hooks/crm_add_from_chat.js
+   - pocketbase/hooks/cron_backfill_conversation_timestamps.js
+   - pocketbase/hooks/cron_enrich_conversations.js
+   - pocketbase/hooks/cron_finish_stale_imports.js
+   - pocketbase/hooks/on_user_signup.js
+   - pocketbase/hooks/team_create_member.js
+   - pocketbase/hooks/team_invite.js
+   - pocketbase/hooks/team_leave.js
+   - pocketbase/hooks/team_members.js
+   - pocketbase/hooks/team_remove.js
+   - pocketbase/hooks/whatsapp_ai_response.js
+   - pocketbase/hooks/whatsapp_archive_conversation.js
+   - pocketbase/hooks/whatsapp_backfill_timestamps.js
+   - pocketbase/hooks/whatsapp_create.js
+   - pocketbase/hooks/whatsapp_debug_webhook.js
+   - pocketbase/hooks/whatsapp_disconnect.js
+   - pocketbase/hooks/whatsapp_factory_reset.js
+   - pocketbase/hooks/whatsapp_link_preview.js
+   - pocketbase/hooks/whatsapp_reimport_history.js
+   - pocketbase/hooks/whatsapp_send_media.js
+   - pocketbase/hooks/whatsapp_send_message.js
+   - pocketbase/hooks/whatsapp_status.js
+   - pocketbase/hooks/whatsapp_sync_all_conversations.js
+   - pocketbase/hooks/whatsapp_sync_conversation.js
+   - pocketbase/hooks/whatsapp_update_contact_name.js
+   - pocketbase/hooks/whatsapp_webhook.js
+
+3. BACKEND POCKETBASE (MIGRATIONS PRINCIPAIS)
+   - pocketbase/migrations/0034_create_whatsapp_collections.js
+   - pocketbase/migrations/0035_create_crm_contacts.js
+   - pocketbase/migrations/0036_create_crm_companies.js
+   - pocketbase/migrations/0037_create_ai_agents.js
+   - pocketbase/migrations/0039_crm_feature.js
+   - pocketbase/migrations/0040_ai_feature.js
+   - pocketbase/migrations/0041_system_seeds.js
+   - pocketbase/migrations/0042_create_tasks.js
+   - pocketbase/migrations/0043_create_accounts_and_migrate.js
+   - pocketbase/migrations/0044_update_api_rules_for_accounts.js
+   - pocketbase/migrations/0046_add_assigned_to.js
+   - pocketbase/migrations/0047_repopulate_orphan_account_ids.js
+   - pocketbase/migrations/0048_create_categories.js
+   - pocketbase/migrations/0049_update_qrcode_max_constraint.js
+   - pocketbase/migrations/0050_update_qrcode_max_constraint_v2.js
+   - pocketbase/migrations/0051_update_ai_agents_schema.js
+   - pocketbase/migrations/0052_define_whatsapp_agent.js
+   - pocketbase/migrations/0053_add_ai_conversation_id.js
+   - pocketbase/migrations/0054_create_crm_stages.js
+   - pocketbase/migrations/0059_add_task_statuses.js
+   - pocketbase/migrations/0060_increase_system_prompt_max.js
+   - pocketbase/migrations/0061_increase_system_prompt_to_10000.js
+   - pocketbase/migrations/0062_add_default_ai_agent_id.js
+   - pocketbase/migrations/0063_increase_system_prompt_to_20000.js
+
+4. FRONTEND - CORE, SERVICES & TYPES (SRC)
+   - src/types/models.ts
+   - src/stores/useAppStore.tsx
+   - src/services/ai_agents.ts
+   - src/services/categories.ts
+   - src/services/crm_companies_service.ts
+   - src/services/crm_service.ts
+   - src/services/crm_stages_service.ts
+   - src/services/tasks.ts
+   - src/services/team.ts
+   - src/services/whatsapp_service.ts
+
+5. FRONTEND - LIBS & HOOKS (SRC)
+   - src/lib/pocketbase/client.ts
+   - src/lib/pocketbase/errors.ts
+   - src/lib/colors.ts
+   - src/lib/format-time.ts
+   - src/lib/stage-colors.ts
+   - src/lib/task-meta.ts
+   - src/lib/utils.ts
+   - src/lib/whatsapp-mappers.ts
+   - src/hooks/use-auth.tsx
+   - src/hooks/use-categories.ts
+   - src/hooks/use-crm.ts
+   - src/hooks/use-crm-companies.ts
+   - src/hooks/use-crm-stages.ts
+   - src/hooks/use-current-account.ts
+   - src/hooks/use-history-sync.ts
+   - src/hooks/use-link-preview.ts
+   - src/hooks/use-long-press.ts
+   - src/hooks/use-qr-connection.ts
+   - src/hooks/use-realtime.ts
+   - src/hooks/use-tasks.ts
+   - src/hooks/use-team-members.ts
+   - src/hooks/use-whatsapp.ts
+
+6. FRONTEND - ENTRYPOINT, LAYOUT & PAGES (SRC)
+   - src/main.tsx
+   - src/main.css
+   - src/App.tsx
+   - src/components/Layout.tsx
+   - src/pages/Agentes.tsx
+   - src/pages/Conversas.tsx
+   - src/pages/CRM.tsx
+   - src/pages/Equipe.tsx
+   - src/pages/Home.tsx
+   - src/pages/Index.tsx
+   - src/pages/NotFound.tsx
+   - src/pages/Tarefas.tsx
+
+7. FRONTEND - COMPONENTES MODULARES (SRC/COMPONENTS)
+   - src/components/agentes/AgenteCard.tsx
+   - src/components/agentes/AgenteFormDialog.tsx
+   - src/components/categories/CategoriesSheet.tsx
+   - src/components/categories/CategoryPicker.tsx
+   - src/components/chat/AgenteConversaToggle.tsx
+   - src/components/chat/ChatArea.tsx
+   - src/components/chat/ChatList.tsx
+   - src/components/chat/ImportProgressBanner.tsx
+   - src/components/chat/TaskActionBar.tsx
+   - src/components/chat/TaskFormDialog.tsx
+   - src/components/chat/TaskViewDialog.tsx
+   - src/components/crm/AddToCrmDialog.tsx
+   - src/components/crm/CompanyAutocomplete.tsx
+   - src/components/crm/ContactTaskCarousel.tsx
+   - src/components/crm/ContactTaskCarouselInline.tsx
+   - src/components/crm/CrmCompaniesList.tsx
+   - src/components/crm/CrmCompanyDetail.tsx
+   - src/components/crm/CrmContactDetail.tsx
+   - src/components/crm/CrmPipelineBoard.tsx
+   - src/components/crm/PipelineEditorSheet.tsx
+   - src/components/TaskViewDialog.tsx
+   - src/components/skip/ConnectorButton.tsx
+
+================================================================
+ARQUIVO: package.json
+================================================================
+{
+  "name": "skip-react-template",
+  "description": "A frontend React Vite TypeScript Shadcn UI template for Skip projects",
+  "private": true,
+  "version": "0.0.33",
+  "type": "module",
+  "scripts": {
+    "start": "vite dev",
+    "dev": "vite",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint src --fix",
+    "format": "oxfmt",
+    "format:check": "oxfmt --check",
+    "preview": "vite preview",
+    "test": "echo \"there are no tests for this project\" && exit 0",
+    "test:watch": "echo \"there are no tests for this project\" && exit 0"
+  },
+  "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@radix-ui/react-accordion": "^1.2.12",
+    "@radix-ui/react-alert-dialog": "^1.1.15",
+    "@radix-ui/react-aspect-ratio": "^1.1.8",
+    "@radix-ui/react-avatar": "^1.1.11",
+    "@radix-ui/react-checkbox": "^1.3.3",
+    "@radix-ui/react-collapsible": "^1.1.12",
+    "@radix-ui/react-context-menu": "^2.2.16",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-dropdown-menu": "^2.1.16",
+    "@radix-ui/react-hover-card": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
+    "@radix-ui/react-menubar": "^1.1.16",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-popover": "^1.1.15",
+    "@radix-ui/react-progress": "^1.1.8",
+    "@radix-ui/react-radio-group": "^1.3.8",
+    "@radix-ui/react-scroll-area": "^1.2.10",
+    "@radix-ui/react-select": "^2.2.6",
+    "@radix-ui/react-separator": "^1.1.8",
+    "@radix-ui/react-slider": "^1.3.6",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@radix-ui/react-switch": "^1.2.6",
+    "@radix-ui/react-tabs": "^1.1.13",
+    "@radix-ui/react-toast": "^1.2.15",
+    "@radix-ui/react-toggle": "^1.1.10",
+    "@radix-ui/react-toggle-group": "^1.1.11",
+    "@radix-ui/react-tooltip": "^1.2.8",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "caniuse-lite": "^1.0.30001786",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "date-fns": "^4.1.0",
+    "embla-carousel-autoplay": "^8.6.0",
+    "embla-carousel-react": "^8.6.0",
+    "input-otp": "^1.4.2",
+    "next-themes": "^0.4.6",
+    "pocketbase": "~0.26.8",
+    "react": "^19.2.4",
+    "react-day-picker": "^9.14.0",
+    "react-dom": "^19.2.4",
+    "react-hook-form": "^7.72.1",
+    "react-resizable-panels": "^3.0.6",
+    "react-router-dom": "^7.14.0",
+    "recharts": "^2.15.4",
+    "sonner": "^2.0.7",
+    "tailwind-merge": "^2.6.1",
+    "tailwindcss-animate": "^1.0.7",
+    "vaul": "^1.1.2",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.19",
+    "@types/node": "^25.5.2",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.27",
+    "lucide-react": "^0.577.0",
+    "magic-string": "^0.30.21",
+    "oxc-parser": "^0.123.0",
+    "oxfmt": "^0.43.0",
+    "oxlint": "^1.58.0",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^6.0.2",
+    "vite": "8.0.5"
+  }
+}
+
+================================================================
+ARQUIVO: vite.config.ts
+================================================================
+/* Vite config for building the frontend react app: https://vite.dev/config/ */
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import path from 'path'
+// @ts-expect-error - uidPlugin is a custom plugin
+import uidPlugin from './vite-plugin-react-uid'
+
+// https://vitejs.dev/config/
+export default defineConfig(({ mode }) => ({
+  server: {
+    host: '::',
+    port: 8080,
+  },
+  build: {
+    outDir: mode === 'development' ? 'dev-dist' : 'dist',
+    minify: mode !== 'development',
+    sourcemap: mode === 'development',
+    rolldownOptions: {
+      onwarn(warning, warn) {
+        if (warning.code === 'MODULE_LEVEL_DIRECTIVE') {
+          return
+        }
+        warn(warning)
+      },
+    },
+  },
+  plugins: [mode === 'development' ? uidPlugin() : undefined, react()].filter(Boolean),
+  define: {
+    'process.env.NODE_ENV': JSON.stringify(mode ?? process.env.NODE_ENV ?? 'production'),
+  },
+  resolve: {
+    alias: [
+      {
+        find: '@',
+        replacement: path.resolve(__dirname, './src'),
+      },
+      {
+        find: /zod\/v4\/core/,
+        replacement: path.resolve(__dirname, 'node_modules', 'zod', 'v4', 'core'),
+      }
+    ],
+  },
+}))
+
+================================================================
+ARQUIVO: tailwind.config.ts
+================================================================
+import type { Config } from 'tailwindcss'
+import animatePlugin from 'tailwindcss-animate'
+import typographyPlugin from '@tailwindcss/typography'
+import aspectRatioPlugin from '@tailwindcss/aspect-ratio'
+
+export default {
+  darkMode: ['class'],
+  content: [
+    './pages/**/*.{ts,tsx}',
+    './components/**/*.{ts,tsx}',
+    './app/**/*.{ts,tsx}',
+    './src/**/*.{ts,tsx}',
+  ],
+  prefix: '',
+  theme: {
+    container: {
+      center: true,
+      padding: '2rem',
+      screens: {
+        sm: '640px',
+        md: '768px',
+        lg: '1024px',
+        xl: '1280px',
+        '2xl': '1400px',
+      },
+    },
+    extend: {
+      fontFamily: {
+        sans: ['Manrope', 'sans-serif'],
+        serif: ['Bricolage Grotesque', 'sans-serif'],
+      },
+      colors: {
+        border: 'hsl(var(--border))',
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
+        background: 'hsl(var(--background))',
+        foreground: 'hsl(var(--foreground))',
+        primary: {
+          DEFAULT: 'hsl(var(--primary))',
+          foreground: 'hsl(var(--primary-foreground))',
+        },
+        secondary: {
+          DEFAULT: 'hsl(var(--secondary))',
+          foreground: 'hsl(var(--secondary-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        muted: {
+          DEFAULT: 'hsl(var(--muted))',
+          foreground: 'hsl(var(--muted-foreground))',
+        },
+        accent: {
+          DEFAULT: 'hsl(var(--accent))',
+          foreground: 'hsl(var(--accent-foreground))',
+        },
+        popover: {
+          DEFAULT: 'hsl(var(--popover))',
+          foreground: 'hsl(var(--popover-foreground))',
+        },
+        card: {
+          DEFAULT: 'hsl(var(--card))',
+          foreground: 'hsl(var(--card-foreground))',
+        },
+        sidebar: {
+          DEFAULT: 'hsl(var(--sidebar-background))',
+          foreground: 'hsl(var(--sidebar-foreground))',
+          primary: 'hsl(var(--sidebar-primary))',
+          'primary-foreground': 'hsl(var(--sidebar-primary-foreground))',
+          accent: 'hsl(var(--sidebar-accent))',
+          'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
+          border: 'hsl(var(--sidebar-border))',
+          ring: 'hsl(var(--sidebar-ring))',
+        },
+      },
+      borderRadius: {
+        lg: 'var(--radius)',
+        md: 'calc(var(--radius) - 2px)',
+        sm: 'calc(var(--radius) - 4px)',
+      },
+    },
+  },
+  plugins: [animatePlugin, typographyPlugin, aspectRatioPlugin],
+} satisfies Config
+
+================================================================
+ARQUIVO: tsconfig.json
+================================================================
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ],
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "noImplicitAny": false,
+    "noUnusedParameters": false,
+    "allowJs": true,
+    "strictNullChecks": true,
+    "skipLibCheck": true
+  }
+}
+
+================================================================
+ARQUIVO: tsconfig.app.json
+================================================================
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "useDefineForClassFields": true,
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "ESNext"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "strict": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noImplicitAny": false,
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["src", "tailwind.config.ts", "*.tsx"]
+}
+
+================================================================
+ARQUIVO: tsconfig.node.json
+================================================================
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "strict": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["vite.config.ts"]
+}
+
+================================================================
+ARQUIVO: index.html
+================================================================
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Um incrível projeto do Skip</title>
+    <meta name="description" content="Projeto gerado usando Skip (https://goskip.dev)" />
+    <meta name="author" content="Skip (https://goskip.dev)" />
+    <meta property="og:image" content="/og-image.png" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script src="https://goskip.dev/skip.js"></script>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
+================================================================
+ARQUIVO: CLAUDE.md
+================================================================
+# Guia para agentes neste repositório
+
+Este repositório roda numa plataforma híbrida: **Skip** (no-code/AI builder) +
+**git** (GitHub) + **PocketBase** (backend self-hosted pelo Skip).
+
+## Stack
+- **Front:** React + Vite + TypeScript + shadcn/ui + Tailwind. Entrada em `src/main.tsx`, rotas em `src/App.tsx`.
+- **Backend:** PocketBase JSVM (Goja). Hooks em `pocketbase/hooks/*.js`, migrations em `pocketbase/migrations/*.js`.
+- **Integração externa:** Evolution API (WhatsApp Baileys) chamada via `$http.send` dos hooks.
+- **Plataforma:** o Skip Cloud roda o PocketBase, gerencia sync com GitHub e faz publish/build do front.
+
+================================================================
+ARQUIVO: src/App.tsx
+================================================================
+import { Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './hooks/use-auth'
+import { AppProvider } from './stores/useAppStore'
+import Layout from './components/Layout'
+import Index from './pages/Index'
+import Conversas from './pages/Conversas'
+import CRM from './pages/CRM'
+import Home from './pages/Home'
+import Tarefas from './pages/Tarefas'
+import Agentes from './pages/Agentes'
+import Equipe from './pages/Equipe'
+import NotFound from './pages/NotFound'
+import { Toaster } from './components/ui/toaster'
+import { Toaster as Sonner } from './components/ui/sonner'
+
+export function App() {
+  return (
+    <AuthProvider>
+      <AppProvider>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Home />} />
+            <Route path="/conversas" element={<Conversas />} />
+            <Route path="/crm" element={<CRM />} />
+            <Route path="/tarefas" element={<Tarefas />} />
+            <Route path="/agentes" element={<Agentes />} />
+            <Route path="/equipe" element={<Equipe />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Toaster />
+        <Sonner />
+      </AppProvider>
+    </AuthProvider>
+  )
+}
+export default App
+
+================================================================
+ARQUIVO: src/main.tsx
+================================================================
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import './main.css'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </React.StrictMode>,
+)
+
+================================================================
+ARQUIVO: src/lib/pocketbase/client.ts
+================================================================
+import PocketBase from 'pocketbase'
+
+export const pb = new PocketBase(
+  import.meta.env.VITE_POCKETBASE_URL || window.location.origin
+)
+
+================================================================
+ARQUIVO: src/lib/pocketbase/errors.ts
+================================================================
+import { ClientResponseError } from 'pocketbase'
+
+export type FieldErrors = Record<string, string>
+
+export function extractFieldErrors(err: unknown): FieldErrors {
+  if (err instanceof ClientResponseError && err.data?.data) {
+    const fieldErrors: FieldErrors = {}
+    for (const [key, value] of Object.entries(err.data.data)) {
+      if (typeof value === 'object' && value !== null && 'message' in value) {
+        fieldErrors[key] = String((value as { message: unknown }).message)
+      } else if (typeof value === 'string') {
+        fieldErrors[key] = value
+      }
+    }
+    return fieldErrors
+  }
+  return {}
+}
+
+export function getErrorMessage(err: unknown, fallback = 'Ocorreu um erro.'): string {
+  if (err instanceof ClientResponseError) {
+    if (err.message && !err.message.includes('Something went wrong')) {
+      return err.message
+    }
+  }
+  if (err instanceof Error) return err.message
+  return fallback
+}
+
+================================================================
+ARQUIVO: src/types/models.ts
+================================================================
+export type CategoryColor =
+  | 'slate'
+  | 'red'
+  | 'orange'
+  | 'amber'
+  | 'yellow'
+  | 'lime'
+  | 'green'
+  | 'emerald'
+  | 'teal'
+  | 'cyan'
+  | 'sky'
+  | 'blue'
+  | 'indigo'
+  | 'violet'
+  | 'purple'
+  | 'fuchsia'
+  | 'pink'
+  | 'rose'
+
+export interface Category {
+  id: string
+  account_id: string
+  name: string
+  color: CategoryColor
+  icon?: string
+  created_by?: string
+  created?: string
+  updated?: string
+}
+
+export interface Account {
+  id: string
+  name: string
+  owner_id: string
+  created?: string
+  updated?: string
+}
+
+export interface AccountMember {
+  id: string
+  account_id: string
+  user_id: string
+  role: 'owner' | 'member'
+  joined_at?: string
+  created?: string
+  updated?: string
+  name?: string
+  email?: string
+}
+
+export interface AccountInvite {
+  id: string
+  account_id: string
+  email: string
+  role: 'owner' | 'member'
+  invited_by?: string
+  created?: string
+  updated?: string
+}
+
+export interface AiAgent {
+  id: string
+  user_id: string
+  account_id?: string
+  name: string
+  system_prompt: string
+  created?: string
+  updated?: string
+}
+
+export interface User {
+  id: string
+  email: string
+  name?: string
+  avatar?: string
+}
+
+export interface WhatsappInstance {
+  id: string
+  user_id: string
+  account_id?: string
+  instance_name: string
+  status: 'creating' | 'qrcode' | 'connected' | 'disconnected'
+  phone_number?: string
+  sync_period_days?: number
+  is_importing_history?: boolean
+  import_messages_count?: number
+  import_started_at?: string
+  import_finished_at?: string
+  qrcode_base64?: string
+  default_ai_agent_id?: string
+  created?: string
+  updated?: string
+}
+
+export interface Conversation {
+  id: string
+  user_id: string
+  account_id?: string
+  instance_name: string
+  remote_jid: string
+  contact_name?: string
+  contact_phone?: string
+  is_group?: boolean
+  type?: 'individual' | 'group'
+  avatar?: string
+  avatar_url?: string
+  last_message?: string
+  unread_count?: number
+  last_message_timestamp?: number
+  history_synced_at?: string
+  history_oldest_timestamp?: number
+  archived?: boolean
+  ai_enabled?: boolean
+  ai_agent_id?: string
+  ai_conversation_id?: string
+  category_ids?: string[]
+  created?: string
+  updated?: string
+}
+
+export interface CrmContact {
+  id: string
+  user_id: string
+  account_id?: string
+  instance_name: string
+  jid: string
+  phone?: string
+  push_name?: string
+  contact_name?: string
+  avatar_url?: string
+  notes?: string
+  stage: string
+  company_id?: string
+  role?: string
+  email?: string
+  assigned_to?: string
+  category_ids?: string[]
+  last_synced_at?: string
+  created?: string
+  updated?: string
+}
+
+export interface CrmCompany {
+  id: string
+  user_id: string
+  account_id?: string
+  name: string
+  cnpj?: string
+  website?: string
+  linkedin_url?: string
+  industry?: string
+  size?: string
+  logo_url?: string
+  notes?: string
+  created?: string
+  updated?: string
+}
+
+export interface WhatsappMessage {
+  id: string
+  user_id: string
+  account_id?: string
+  instance_name: string
+  remote_jid: string
+  from_me: boolean
+  message_id?: string
+  push_name?: string
+  content?: string
+  message_type?: string
+  media_file?: string
+  media_url?: string
+  media_mimetype?: string
+  media_filename?: string
+  status?: string
+  timestamp: number
+  participant_jid?: string
+  participant_pushname?: string
+  reactions?: Array<{ emoji: string; participant: string }>
+  link_url?: string
+  link_title?: string
+  link_description?: string
+  link_thumbnail_b64?: string
+  pending_ai_response?: boolean
+  ai_response_attempted_at?: string
+  ai_response_error?: string
+  created?: string
+  updated?: string
+}
+
+export interface Task {
+  id: string
+  user_id: string
+  account_id?: string
+  title: string
+  description?: string
+  status:
+    | 'pendente'
+    | 'em_andamento'
+    | 'aguardando_contato'
+    | 'aguardando_suporte'
+    | 'concluida'
+    | 'cancelada'
+  priority: 'baixa' | 'media' | 'alta' | 'urgente'
+  due_date?: string
+  crm_contact_id?: string
+  crm_company_id?: string
+  conversation_id?: string
+  linked_message_ids?: string[]
+  assigned_to?: string
+  completed_at?: string
+  created?: string
+  updated?: string
+}
+
+================================================================
+ARQUIVO: src/services/tasks.ts
+================================================================
+import { pb } from '@/lib/pocketbase/client'
+import { Task } from '@/types/models'
+
+export async function createTask(data: Partial<Task>): Promise<Task> {
+  return await pb.collection('tasks').create<Task>(data)
+}
+
+export async function updateTask(id: string, data: Partial<Task>): Promise<Task> {
+  return await pb.collection('tasks').update<Task>(id, data)
+}
+
+export async function getTasks(filter?: string, sort = '-created'): Promise<Task[]> {
+  return await pb.collection('tasks').getFullList<Task>({
+    filter,
+    sort,
+  })
+}
+
+export async function deleteTask(id: string): Promise<boolean> {
+  return await pb.collection('tasks').delete(id)
+}
+
+================================================================
+ARQUIVO: src/services/crm_service.ts
+================================================================
+import { pb } from '@/lib/pocketbase/client'
+import { CrmContact } from '@/types/models'
+
+export interface AddToCrmOptions {
+  instance_name: string
+  jid: string
+  stage?: string
+  contact_name?: string
+  company_id?: string
+  role?: string
+  email?: string
+  assigned_to?: string
+  category_ids?: string[]
+}
+
+export async function adicionarContatoDoChat(
+  opts: AddToCrmOptions,
+): Promise<{ record: CrmContact; isAlreadyAdded: boolean }> {
+  const res = await pb.send('/backend/v1/crm/add-from-chat', {
+    method: 'POST',
+    body: opts,
+  })
+  return res as { record: CrmContact; isAlreadyAdded: boolean }
+}
+
+export async function getCrmContactByJid(
+  instanceName: string,
+  jid: string,
+): Promise<CrmContact | null> {
+  try {
+    return await pb.collection('crm_contacts').getFirstListItem<CrmContact>(
+      `instance_name = "${instanceName}" && jid = "${jid}"`
+    )
+  } catch (_) {
+    return null
+  }
+}
+
+export async function getCrmContacts(): Promise<CrmContact[]> {
+  return await pb.collection('crm_contacts').getFullList<CrmContact>({
+    sort: '-created',
+  })
+}
+
+export async function updateCrmContactStage(
+  id: string,
+  stage: string,
+): Promise<CrmContact> {
+  return await pb.collection('crm_contacts').update<CrmContact>(id, { stage })
+}
+
+export async function deleteCrmContact(id: string): Promise<boolean> {
+  return await pb.collection('crm_contacts').delete(id)
+}
+
+export async function getAllCrmContacts(): Promise<CrmContact[]> {
+  return await pb.collection('crm_contacts').getFullList<CrmContact>({
+    sort: '+contact_name',
+  })
+}
+
+================================================================
+ARQUIVO: src/services/ai_agents.ts
+================================================================
+import { pb } from '@/lib/pocketbase/client'
+import { AiAgent } from '@/types/models'
+
+export async function getAiAgents(): Promise<AiAgent[]> {
+  return await pb.collection('ai_agents').getFullList<AiAgent>({
+    sort: '-created',
+  })
+}
+
+export async function createAiAgent(data: Partial<AiAgent>): Promise<AiAgent> {
+  return await pb.collection('ai_agents').create<AiAgent>(data)
+}
+
+export async function updateAiAgent(id: string, data: Partial<AiAgent>): Promise<AiAgent> {
+  return await pb.collection('ai_agents').update<AiAgent>(id, data)
+}
+
+export async function deleteAiAgent(id: string): Promise<boolean> {
+  return await pb.collection('ai_agents').delete(id)
+}
+
+================================================================
+ARQUIVO: src/services/categories.ts
+================================================================
+import { pb } from '@/lib/pocketbase/client'
+import { Category } from '@/types/models'
+
+export async function listCategories(): Promise<Category[]> {
+  try {
+    return await pb.collection('categories').getFullList<Category>({
+      sort: 'name',
+    })
+  } catch (err) {
+    console.error('Erro ao listar categorias:', err)
+    return []
+  }
+}
+
+export async function createCategory(
+  data: Omit<Category, 'id' | 'created' | 'updated'>,
+): Promise<Category> {
+  return await pb.collection('categories').create<Category>(data)
+}
+
+export async function updateCategory(
+  id: string,
+  data: Partial<Omit<Category, 'id' | 'account_id' | 'created' | 'updated'>>,
+): Promise<Category> {
+  return await pb.collection('categories').update<Category>(id, data)
+}
+
+export async function deleteCategory(id: string): Promise<boolean> {
+  try {
+    await pb.collection('categories').delete(id)
+    return true
+  } catch (err) {
+    console.error('Erro ao deletar categoria:', err)
+    return false
+  }
+}
+
+================================================================
+ARQUIVO: src/services/whatsapp_service.ts
+================================================================
+import { pb } from '@/lib/pocketbase/client'
+
+export type SyncPeriod = 1 | 7 | 30 | 90 | 0
+
+export async function criarInstancia(instanceName?: string, syncPeriodDays: SyncPeriod = 7) {
+  const res = await pb.send('/backend/v1/whatsapp/create-instance', {
+    method: 'POST',
+    body: { instanceName, syncPeriodDays },
+  })
+  return res as { instanceName: string; qrcodeBase64: string; status: string }
+}
+
+export async function consultarStatusInstancia(instanceName: string) {
+  const res = await pb.send(
+    `/backend/v1/whatsapp/instance-status?instanceName=${encodeURIComponent(instanceName)}`,
+    { method: 'GET' },
+  )
+  return res as {
+    status: 'creating' | 'qrcode' | 'connected' | 'disconnected'
+    state?: string
+    qrcodeBase64?: string
+    instanceName: string
+  }
+}
+
+export async function desconectarInstancia(instanceName: string) {
+  return await pb.send('/backend/v1/whatsapp/disconnect', {
+    method: 'POST',
+    body: { instanceName },
+  })
+}
+
+export async function factoryReset() {
+  return await pb.send('/backend/v1/whatsapp/factory-reset', {
+    method: 'POST',
+  })
+}
+
+export async function enviarTexto(instanceName: string, number: string, text: string) {
+  return await pb.send('/backend/v1/whatsapp/send-message', {
+    method: 'POST',
+    body: { instanceName, number, text },
+  })
+}
+
+export async function reimportarHistorico(instanceName: string, syncPeriodDays: SyncPeriod = 7) {
+  return await pb.send('/backend/v1/whatsapp/reimport-history', {
+    method: 'POST',
+    body: { instanceName, syncPeriodDays },
+  })
+}
+
+export async function sincronizarConversa(
+  instanceName: string,
+  remoteJid: string,
+  before?: number,
+) {
+  return await pb.send('/backend/v1/whatsapp/sync-conversation', {
+    method: 'POST',
+    body: {
+      instance_name: instanceName,
+      remote_jid: remoteJid,
+      before: before && before > 0 ? before : undefined,
+    },
+  })
+}
+
+export async function sincronizarTodasConversas() {
+  return await pb.send('/backend/v1/whatsapp/sync-all-conversations', {
+    method: 'POST',
+  })
+}
+
+export async function atualizarNomeContato(
+  instanceName: string,
+  remoteJid: string,
+  contactName: string,
+) {
+  return await pb.send('/backend/v1/whatsapp/update-contact-name', {
+    method: 'POST',
+    body: {
+      instance_name: instanceName,
+      remote_jid: remoteJid,
+      contact_name: contactName,
+    },
+  })
+}
+
+export async function arquivarConversa(conversationId: string, archived: boolean) {
+  return await pb.send('/backend/v1/whatsapp/archive-conversation', {
+    method: 'POST',
+    body: { conversationId, archived },
+  })
+}
+
+================================================================
+ARQUIVO: src/hooks/use-auth.tsx
+================================================================
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { pb } from '@/lib/pocketbase/client'
+import { User } from '@/types/models'
+
+interface AuthContextType {
+  user: User | null
+  token: string | null
+  isLoading: boolean
+  logout: () => void
+}
+
+const AuthContext = createContext<AuthContextType>({
+  user: null,
+  token: null,
+  isLoading: true,
+  logout: () => {},
+})
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null)
+  const [token, setToken] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    const updateUser = () => {
+      if (pb.authStore.isValid && pb.authStore.record) {
+        setUser({
+          id: pb.authStore.record.id,
+          email: pb.authStore.record.email || '',
+          name: pb.authStore.record.name || '',
+          avatar: pb.authStore.record.avatar || '',
+        })
+        setToken(pb.authStore.token)
+      } else {
+        setUser(null)
+        setToken(null)
+      }
+      setIsLoading(false)
+    }
+
+    updateUser()
+
+    const unsubscribe = pb.authStore.onChange(() => {
+      updateUser()
+    })
+
+    return () => {
+      unsubscribe()
+    }
+  }, [])
+
+  const logout = () => {
+    pb.authStore.clear()
+    setUser(null)
+    setToken(null)
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, token, isLoading, logout }}>
+      {children}
+    </AuthContext.Provider>
+  )
+}
+
+export const useAuth = () => useContext(AuthContext)
+
+================================================================
+ARQUIVO: src/hooks/use-realtime.ts
+================================================================
+import { useEffect, useRef } from 'react'
+import { pb } from '@/lib/pocketbase/client'
+import { RecordSubscription } from 'pocketbase'
+
+export function useRealtime<T = any>(
+  collection: string,
+  callback: (data: RecordSubscription<T>) => void,
+  filter?: string,
+) {
+  const callbackRef = useRef(callback)
+  callbackRef.current = callback
+
+  useEffect(() => {
+    let isSubscribed = true
+
+    const subscribe = async () => {
+      try {
+        await pb.collection(collection).subscribe<T>(
+          filter || '*',
+          (e) => {
+            if (isSubscribed) {
+              callbackRef.current(e)
+            }
+          },
+        )
+      } catch (err) {
+        console.warn(`Erro ao assinar realtime para ${collection}:`, err)
+      }
+    }
+
+    subscribe()
+
+    return () => {
+      isSubscribed = false
+      pb.collection(collection).unsubscribe(filter || '*').catch(() => {})
+    }
+  }, [collection, filter])
+}
+
+================================================================
+ARQUIVO: src/hooks/use-current-account.ts
+================================================================
+import { useState, useEffect } from 'react'
+import { pb } from '@/lib/pocketbase/client'
+import { useAuth } from './use-auth'
+import { Account, AccountMember } from '@/types/models'
+
+export function useCurrentAccount() {
+  const { user } = useAuth()
+  const [account, setAccount] = useState<Account | null>(null)
+  const [membership, setMembership] = useState<AccountMember | null>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    if (!user) {
+      setAccount(null)
+      setMembership(null)
+      setLoading(false)
+      return
+    }
+
+    let isMounted = true
+
+    async function loadAccount() {
+      try {
+        const member = await pb
+          .collection('account_members')
+          .getFirstListItem<AccountMember>(`user_id = "${user?.id}"`, {
+            expand: 'account_id',
+          })
+
+        if (!isMounted) return
+
+        setMembership(member)
+        if (member && (member as any).expand?.account_id) {
+          setAccount((member as any).expand.account_id)
+        } else if (member?.account_id) {
+          const acc = await pb.collection('accounts').getOne<Account>(member.account_id)
+          if (isMounted) setAccount(acc)
+        }
+      } catch (err) {
+        console.warn('Erro ao carregar conta atual:', err)
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    loadAccount()
+
+    return () => {
+      isMounted = false
+    }
+  }, [user])
+
+  return { account, membership, loading, isOwner: membership?.role === 'owner' }
+}
+
+================================================================
+ARQUIVO: src/lib/stage-colors.ts
+================================================================
+export interface StageStyle {
+  label: string
+  badgeClass: string
+  dotClass: string
+  borderClass: string
+  headerBg: string
+}
+
+export const STAGE_COLOR_STYLES: Record<string, StageStyle> = {
+  blue: {
+    label: 'Azul',
+    badgeClass: 'bg-blue-500/10 text-blue-700 dark:text-blue-300 border-blue-500/30',
+    dotClass: 'bg-blue-500',
+    borderClass: 'border-blue-500',
+    headerBg: 'bg-blue-500/5',
+  },
+  amber: {
+    label: 'Âmbar',
+    badgeClass: 'bg-amber-500/10 text-amber-700 dark:text-amber-300 border-amber-500/30',
+    dotClass: 'bg-amber-500',
+    borderClass: 'border-amber-500',
+    headerBg: 'bg-amber-500/5',
+  },
+  emerald: {
+    label: 'Esmeralda',
+    badgeClass: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30',
+    dotClass: 'bg-emerald-500',
+    borderClass: 'border-emerald-500',
+    headerBg: 'bg-emerald-500/5',
+  },
+  rose: {
+    label: 'Rosa / Vermelho',
+    badgeClass: 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30',
+    dotClass: 'bg-rose-500',
+    borderClass: 'border-rose-500',
+    headerBg: 'bg-rose-500/5',
+  },
+  purple: {
+    label: 'Roxo',
+    badgeClass: 'bg-purple-500/10 text-purple-700 dark:text-purple-300 border-purple-500/30',
+    dotClass: 'bg-purple-500',
+    borderClass: 'border-purple-500',
+    headerBg: 'bg-purple-500/5',
+  },
+  slate: {
+    label: 'Cinza',
+    badgeClass: 'bg-slate-500/10 text-slate-700 dark:text-slate-300 border-slate-500/30',
+    dotClass: 'bg-slate-500',
+    borderClass: 'border-slate-500',
+    headerBg: 'bg-slate-500/5',
+  },
+}
+
+export function stageStyle(color?: string): StageStyle {
+  if (!color || !STAGE_COLOR_STYLES[color]) {
+    return STAGE_COLOR_STYLES.slate
+  }
+  return STAGE_COLOR_STYLES[color]
+}
+
+================================================================
+FIM DO BACKUP CONSOLIDADO
+================================================================
