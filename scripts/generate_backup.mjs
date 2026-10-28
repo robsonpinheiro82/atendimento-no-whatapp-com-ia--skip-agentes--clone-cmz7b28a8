@@ -104,12 +104,7 @@ export const filesToInclude = [
   'pocketbase/migrations/0052_define_whatsapp_agent.js',
   'pocketbase/migrations/0053_add_ai_conversation_id.js',
   'pocketbase/migrations/0054_create_crm_stages.js',
-  'pocketbase/migrations/0055_create_crm_observations.js',
-  'pocketbase/migrations/0056_fix_verified_users.js',
-  'pocketbase/migrations/0057_add_status_to_observations.js',
-  'pocketbase/migrations/0058_add_aguardando_suporte_status.js',
   'pocketbase/migrations/0059_add_task_statuses.js',
-  'pocketbase/migrations/deleted_crm_observations.js',
   'pocketbase/migrations/0060_increase_system_prompt_max.js',
   'pocketbase/migrations/0061_increase_system_prompt_to_10000.js',
   'pocketbase/migrations/0062_add_default_ai_agent_id.js',
@@ -247,9 +242,8 @@ export const filesToInclude = [
   'src/components/ui/use-toast.ts',
 ]
 
-export function generateBackup(options = {}) {
-  const rootDir = options.rootDir || process.cwd()
-  const now = new Date()
+export function buildBackupText(rootDir = process.cwd(), options = {}) {
+  const now = options.fixedDate ? new Date(options.fixedDate) : new Date()
   const dateFormatted = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC'
 
   const validFiles = []
@@ -278,18 +272,10 @@ CONTEÚDO INTEGRAL DOS ARQUIVOS
 ================================================================
 `
 
-  const docsDir = path.resolve(rootDir, 'docs')
-  if (!fs.existsSync(docsDir)) {
-    fs.mkdirSync(docsDir, { recursive: true })
-  }
-
-  const outPath = path.resolve(rootDir, 'docs/backup-codigo-completo.txt')
   const parts = [header]
 
   for (const relPath of validFiles) {
-    parts.push(`\n================================================================\n`)
-    parts.push(`ARQUIVO: ${relPath}\n`)
-    parts.push(`================================================================\n`)
+    parts.push(`\n===== ARQUIVO: ${relPath} =====\n`)
     const fullPath = path.resolve(rootDir, relPath)
     const content = fs.readFileSync(fullPath, 'utf8')
     parts.push(content)
@@ -303,6 +289,21 @@ CONTEÚDO INTEGRAL DOS ARQUIVOS
   parts.push(`================================================================\n`)
 
   const fullContent = parts.join('')
+  return {
+    fullContent,
+    validFiles,
+  }
+}
+
+export function generateBackup(options = {}) {
+  const rootDir = options.rootDir || process.cwd()
+  const docsDir = path.resolve(rootDir, 'docs')
+  if (!fs.existsSync(docsDir)) {
+    fs.mkdirSync(docsDir, { recursive: true })
+  }
+
+  const outPath = path.resolve(rootDir, 'docs/backup-codigo-completo.txt')
+  const { fullContent, validFiles } = buildBackupText(rootDir, options)
   fs.writeFileSync(outPath, fullContent, 'utf8')
 
   console.log(`Backup gerado com sucesso em ${outPath}`)
